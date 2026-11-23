@@ -1,10 +1,9 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // App Router, TS strict; keep deps minimal (no experimental flags needed for P1)
-  experimental: {
-    serverActions: { bodySizeLimit: '1mb' },
-  },
+  // `BUILD_DIST_DIR=.next-ci` lets the build test compile to an isolated
+  // directory so `npm test` never clobbers a concurrently running dev server.
+  ...(process.env.BUILD_DIST_DIR ? { distDir: process.env.BUILD_DIST_DIR } : {}),
 };
 
 export default nextConfig;

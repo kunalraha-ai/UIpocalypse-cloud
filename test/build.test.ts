@@ -12,7 +12,16 @@ import { execFileSync } from 'node:child_process';
 const NEXT_BIN = join(import.meta.dirname, '..', 'node_modules', '.bin', 'next');
 
 describe('P1 gate: the app builds (auth pages compile)', () => {
-  it('next build succeeds', () => {
-    execFileSync(NEXT_BIN, ['build'], { cwd: join(import.meta.dirname, '..'), stdio: 'pipe', timeout: 180_000 });
+  it('next build succeeds (isolated distDir — safe beside a running dev server)', () => {
+    execFileSync(
+      NEXT_BIN,
+      ['build'],
+      {
+        cwd: join(import.meta.dirname, '..'),
+        stdio: 'pipe',
+        timeout: 180_000,
+        env: { ...process.env, BUILD_DIST_DIR: '.next-ci' },
+      },
+    );
   }, 200_000);
 });

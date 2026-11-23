@@ -23,6 +23,8 @@ export type SafeFetchOptions = {
   fetchImpl?: typeof fetch;
   /** internal: redirect loop guard */
   _depth?: number;
+  /** test hook: skip the URL safety check (fixture sites are loopback by nature) */
+  _testSkipUrlCheck?: boolean;
 };
 
 const DEFAULT_MAX_BYTES = 5 * 1024 * 1024;
@@ -81,6 +83,18 @@ export async function safeFetch(rawUrl: string, opts: SafeFetchOptions = {}): Pr
   const maxRedirects = opts.maxRedirects ?? DEFAULT_MAX_REDIRECTS;
   const depth = opts._depth ?? 0;
   const doFetch = opts.fetchImpl ?? fetch;
+
+  // test hook: bypass the SSRF check entirely (fixture sites are loopback)
+  if (opts._testSkipUrlCheck) {
+    const res = await doFetch(rawUrl, { redirect: 'manual', signal: AbortSignal.timeout(timeoutMs), headers: { 'user-agent': opts.userAgent ?? 'UIpocalypseCloudBot/0.1' } });
+    if (res.status >= 300 && res.status < 400 && !opts._testSkipUrlCheck) {
+      const location = res.headers.get('location');
+      if (location && (opts._depth ?? 0) < maxRedirects) {
+        return safeFetch(new URL(location, rawUrl).toString(), { ...opts, _depth: (opts._depth ?? 0) + 1 });
+      }
+    }
+    return capResponse(res, maxBytes, new AbortController());
+  }
 
   const { url, ips } = await assertSafeUrl(rawUrl, resolve);
 

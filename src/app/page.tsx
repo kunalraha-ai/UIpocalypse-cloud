@@ -28,10 +28,24 @@ export default function Home() {
       </section>
       <section className="page">
         <div className="callout callout-warn">
-          <strong>Honest scope:</strong> this product is under construction (Phase 1). Nothing here is launched, no
-          pricing is live, and all descriptions describe intended behavior — not measured results. The open-source
-          sibling is the local{' '}
-          <Link href="https://github.com/kunalraha-ai/UIpocalypse">UIpocalypse</Link> QA tool.
+          <strong>Honest scope:</strong> this product is under construction (all phases P1–P7 built, not launched). Nothing here is live, no pricing is active, and all descriptions describe intended behavior — not measured results. The open-source sibling is the local{' '}
+          <a href="https://github.com/kunalraha-ai/UIpocalypse">UIpocalypse</a> QA tool —{' '}
+          <a href="http://localhost:4310" style={{ color: 'var(--violet)' }}>run it locally →</a>
+        </div>
+      </section>
+      <section className="page">
+        <h2 style={{ textAlign: 'center' }}>Two modes, one product</h2>
+        <div className="mode-grid">
+          <div className="card">
+            <div className="card-head"><strong>Local Tool</strong><span className="badge badge-blue">SIBLING</span></div>
+            <p className="small">Chaos-test a <strong>disposable copy</strong> of your app on your machine. 30+ bot users click everything, race each other, and paste garbage — you get fix-ready evidence before deploying.</p>
+            <a href="http://localhost:4310" className="btn btn-secondary">Open Local Tool →</a>
+          </div>
+          <div className="card">
+            <div className="card-head"><strong>Cloud Monitoring</strong><span className="badge badge-good">THIS APP</span></div>
+            <p className="small">Monitor your <strong>live website</strong> for broken links, JS errors, failed requests, slow pages, and SSL problems — with history diff, notifications, and prepaid credits.</p>
+            <Link href="/signin" className="btn btn-primary">Start monitoring</Link>
+          </div>
         </div>
       </section>
     </>

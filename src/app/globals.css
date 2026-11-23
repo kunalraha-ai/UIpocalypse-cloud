@@ -45,3 +45,11 @@ code{font-family:'JetBrains Mono',monospace;font-size:.92em}
 .callout{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:13px 15px;font-size:13px;text-align:left}
 .callout-warn{border-color:color-mix(in srgb,var(--orange) 50%,var(--line))}
 .callout a{color:var(--violet)}
+
+/* two-mode section */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.mode-grid .card{display:flex;flex-direction:column;gap:12px}
+.mode-grid .card-head{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700}
+.mode-grid .card-head .badge{margin-left:auto;font-size:10px;padding:3px 7px;border-radius:999px;letter-spacing:.06em}
+.badge-good{background:rgba(24,165,114,.14);color:var(--green)}
+.badge-blue{background:rgba(106,162,255,.14);color:var(--blue)}

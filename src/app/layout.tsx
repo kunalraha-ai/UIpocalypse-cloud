@@ -26,6 +26,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               UIpocalypse&nbsp;Cloud
             </Link>
             <nav className="header-actions">
+              <a href="http://localhost:4310" className="btn btn-ghost btn-sm" title="UIpocalypse local tool — chaos-test a copy of your app on your machine">
+                Local Tool
+              </a>
               {user ? (
                 <Link href="/projects" className="btn btn-primary btn-sm">
                   Open dashboard

@@ -14,21 +14,30 @@ let loopPort = 0;
 const trapHits: string[] = [];
 let trap: Server;
 let trapPort = 0;
+const sockets = new Set<import('node:net').Socket>();
+
+function track(server: Server) {
+  server.on('connection', (s) => { sockets.add(s); s.on('close', () => sockets.delete(s)); });
+}
 
 beforeAll(async () => {
   loop = createServer((req, res) => { res.writeHead(200); res.end('loopback content'); });
+  track(loop);
   await new Promise<void>((r) => loop.listen(0, '127.0.0.1', r));
   loopPort = (loop.address() as { port: number }).port;
   // the trap server records any request that reaches it — a hit = guard failure
   trap = createServer((req, res) => { trapHits.push(req.url ?? '/'); res.writeHead(200); res.end('trap'); });
+  track(trap);
   await new Promise<void>((r) => trap.listen(0, '127.0.0.1', r));
   trapPort = (trap.address() as { port: number }).port;
 });
 
 afterAll(async () => {
-  await new Promise<void>((r) => loop.close(() => r));
-  await new Promise<void>((r) => trap.close(() => r));
-});
+  // destroy tracked sockets before close — keep-alives would hang close()
+  for (const s of sockets) s.destroy();
+  await new Promise<void>((r) => loop.close(() => r()));
+  await new Promise<void>((r) => trap.close(() => r()));
+}, 20_000);
 
 /** a resolver that maps test names to loopback — simulating hostile DNS */
 const resolveToTrap: SafeFetchOptions['resolve'] = async (host) => [{ address: '127.0.0.1', family: 4 }];
